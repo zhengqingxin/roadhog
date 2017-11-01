@@ -262,7 +262,7 @@ export function getCSSRules(env, { config, paths, cssLoaders, theme }) {
   if (env === 'production') {
     rules.forEach((rule) => {
       rule.use = ExtractTextPlugin.extract({
-        fallback: 'style',
+        // fallback: 'style',
         use: rule.use.slice(1),
       });
     });
@@ -307,6 +307,7 @@ export function getCommonPlugins({ config, paths, appBuild, NODE_ENV }) {
       },
     ]));
   }
+
   if (config.multipage) {
     // Support hash
     const name = config.hash ? 'common.[hash]' : 'common';
@@ -314,6 +315,10 @@ export function getCommonPlugins({ config, paths, appBuild, NODE_ENV }) {
       name: 'common',
       filename: `${name}.js`,
     }));
+  }
+
+  if (config.ignoreMomentLocale) {
+    ret.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
   }
 
   ret.push(new webpack.LoaderOptionsPlugin({
